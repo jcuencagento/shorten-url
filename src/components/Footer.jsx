@@ -3,8 +3,8 @@ import React from 'react';
 import '../styles/Footer.css'
 import logo from '../logo.svg';
 import { GitHubLogoIcon, LinkedInLogoIcon, IdCardIcon, LockClosedIcon, CodeIcon } from "@radix-ui/react-icons";
-import { Badge } from "../components/ui/badge";
-import { Button } from "../components/ui/button";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 
 function Footer () {
     const github_URL = 'https://github.com/jcuencagento';
@@ -23,7 +23,7 @@ function Footer () {
                     <CodeIcon className="mr-2 h-4 w-4" /> Code  
                 </Button>
             </div>
-            <Badge variant="secondary">
+            <Badge variant="secondary" className="text-lg">
                 <img src={logo} className="mr-4 h-5 w-6" alt="logo" /> Made with 🧠 by Javier Cuenca Gento
             </Badge>
             <div className="links-right">

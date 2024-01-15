@@ -45,13 +45,3 @@
         transform: rotate(360deg);
     }
 }
-
-/* Login Github button */
-.button-github {
-    height: 6vh;
-    width: 25vh;
-}
-
-.git-logo {
-    height: 100%;
-}

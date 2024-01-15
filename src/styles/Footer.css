@@ -18,15 +18,3 @@
     font-weight: 500;
 }
 
-.contacts-left,
-.links-right {
-    display: flex;
-}
-
-.footer-button {
-    display: flex;
-    flex-direction: row;
-    margin-right: 15px;
-}
-
-
