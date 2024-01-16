@@ -2,12 +2,6 @@
     "rewrites": [
         { "source": "/api/github-callback", "destination": "/vercel-functions/github-callback.js" },
         { "source": "/(.*)", "destination": "/index.html" }
-    ],
-    "routes": [
-        {
-            "src": "/vercel-functions/github-callback.js",
-            "dest": "/vercel-functions/github-callback.js"
-        }
     ]
 }
   
