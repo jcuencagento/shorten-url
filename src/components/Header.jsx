@@ -4,6 +4,7 @@ import '../styles/Header.css';
 import logo from '../logo.svg';
 import Menu from './Menu';
 import Auth from './Auth';
+import ModeToggle from './ModeToggle';
 
 function Header () {
     
@@ -15,6 +16,7 @@ function Header () {
             </div>
             <Menu />
             <Auth />
+            <ModeToggle />
         </header>
     )
 }

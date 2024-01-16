@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
 import '../styles/Header.css';
-import toast from "react-hot-toast";
-import { toastStyles } from "../styles/toast";
+import { useToast } from "./ui/use-toast"
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
 
@@ -31,19 +30,18 @@ function Auth() {
     console.log('Authorize URL: ', authorizationUri);*/
 
     const [loading, setLoading] = useState(false);
+    const { toast } = useToast();
 
     const handleSignIn = async () => {
         setLoading(true);
         try {
             window.location.href = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_ID}&redirect_uri=${redirect_uri}&scope=user`;
         } catch (error) {
-            toast(
-                "Login error",
-                {
-                    icon: "🤔",
-                    style: toastStyles,
-                }
-            );
+            toast({
+                variant: "destructive",
+                title: "Login Error",
+                description: "Unknown GItHub error, pleasy try again later."
+            })
         }
     };
 
