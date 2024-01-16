@@ -9,10 +9,10 @@ module.exports = async (req, res) => {
                 Accept: 'application/json',
             },
             body: JSON.stringify({
-                client_id: process.env.GITHUB_ID,
-                client_secret: process.env.GITHUB_SECRET,
+                client_id: '4480658ab13c7754b880',
+                client_secret: '823c4fbed2207fd7db31c16b5819c0f4a429c6c4',
                 code,
-                redirect_uri: 'http://localhost:3000/api/github-callback',
+                redirect_uri: 'https://my-shorten-url.vercel.app/api/github-callback',
             }),
         });
 
@@ -31,9 +31,10 @@ module.exports = async (req, res) => {
         res.writeHead(302, {
             'Location': '/dashboard', // Redirect to your desired route
         });
+
         res.end();
-        } catch (error) {
+    } catch (error) {
         console.error('Error during GitHub authentication:', error);
         res.status(500).send('Internal Server Error');
-        }
-    };
+    }
+};

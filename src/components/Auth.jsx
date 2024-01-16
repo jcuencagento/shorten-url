@@ -24,11 +24,12 @@ function Auth() {
             fetch('https://github.com/login/oauth/access_token', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: JSON.stringify({
-                    client_id: process.env.GITHUB_ID,
-                    client_secret: process.env.GITHUB_SECRET,
+                    client_id: '4480658ab13c7754b880',
+                    client_secret: '823c4fbed2207fd7db31c16b5819c0f4a429c6c4',
                     code: code,
                     redirect_uri: redirect_uri
                 }),
@@ -48,6 +49,7 @@ function Auth() {
                         avatarUrl: userData.avatar_url
                     });
 
+                    console.log(userData);
                     navigate('/dashboard');
                     toast({
                         title: 'Login Successful',
@@ -77,7 +79,7 @@ function Auth() {
     const handleSignIn = async () => {
         console.log(process.env.GITHUB_ID);
         try {
-            window.location.href = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_ID}&redirect_uri=${redirect_uri}&scope=user`;
+            window.location.href = `https://github.com/login/oauth/authorize?client_id=4480658ab13c7754b880&redirect_uri=${redirect_uri}&scope=user`;
         } catch (error) {
             toast({
                 variant: "destructive",
