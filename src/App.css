@@ -1,9 +1,15 @@
 /* Global App style */
 .App {
-    background-color: #282c34;
     min-height: 100vh;
     display: block;
     text-align: center;
     align-items: center;
     justify-content: center;
+}
+
+/* Apply flex for mobile devices */
+@media (max-width: 767px) {
+    .App {
+        display: flex;
+    }
 }

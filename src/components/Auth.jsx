@@ -1,39 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import '../styles/Header.css';
 import { useToast } from "./ui/use-toast"
+import { useNavigate } from 'react-router-dom';
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Button } from "./ui/button";
 
-const redirect_uri = 'http://localhost:3000/api/github-callback';
+const redirect_uri = 'https://my-shorten-url.vercel.app/api/github-callback';
 
 function Auth() {
-
-    /*const oauth2 = simpleOauth2.create({
-        client: {
-          id: id_github,
-          secret: secret_github,
-        },
-        auth: {
-            tokenHost: 'https://github.com',
-            tokenPath: '/login/oauth/access_token',
-            authorizePath: '/login/oauth/authorize',
-        }
-    });
-
-    const redirectUri = 'http://localhost:3000/';
-    const authorizationUri = oauth2.authorizationCode.authorizeURL({
-        redirect_uri: redirectUri, // What do I put here
-        scope: 'read:user',
-    });
-
-    console.log('Authorize URL: ', authorizationUri);*/
-
-    const [loading, setLoading] = useState(false);
     const { toast } = useToast();
+    const navigate = useNavigate();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+
+        if (code) {
+            setIsAuthenticated(true);
+            fetch('https://github.com/login/oauth/access_token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    client_id: process.env.GITHUB_ID,
+                    client_secret: process.env.GITHUB_SECRET,
+                    code: code,
+                    redirect_uri: redirect_uri
+                }),
+            })
+            .then(response => response.text())
+            .then(data => {
+                const accessToken = new URLSearchParams(data).get('access_token');
+                fetch('https://api.github.com/user', {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                })
+                .then(userResponse => userResponse.json())
+                .then(userData => {
+                    setUserData({
+                        username: userData.login,
+                        avatarUrl: userData.avatar_url
+                    });
+
+                    navigate('/dashboard');
+                    toast({
+                        title: 'Login Successful',
+                        description: 'You have successfully logged in with GitHub.'
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                    toast({
+                        variant: 'destructive',
+                        title: 'Login Error',
+                        description: 'Failed to fetch user data from GitHub.'
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('Error exchanging code for access token:', error);
+                toast({
+                    variant: 'destructive',
+                    title: 'Login Error',
+                    description: 'Failed to exchange code for access token.'
+                });
+            });
+        }
+    }, [navigate, toast]);
 
     const handleSignIn = async () => {
-        setLoading(true);
+        console.log(process.env.GITHUB_ID);
         try {
             window.location.href = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_ID}&redirect_uri=${redirect_uri}&scope=user`;
         } catch (error) {
@@ -45,75 +87,26 @@ function Auth() {
         }
     };
 
-    /*
-    if (location.pathname === '/callback') {
-        const { code } = new URLSearchParams(location.search);
-    
-        try {
-          const tokenConfig = {
-            code,
-            redirect_uri: redirectUri,
-          };
-    
-          const result = await oauth2.authorizationCode.getToken(tokenConfig);
-          const accessToken = oauth2.accessToken.create(result);
-    
-          // Now you can use the accessToken to make API requests on behalf of the user
-          console.log('Access Token:', accessToken.token);
-    
-          // Redirect to the home page or another appropriate page
-          history.push('/dashboard');
-        } catch (error) {
-          console.error('Access Token Error', error.message);
-          // Handle the error, e.g., show an error message to the user
-          history.push('/');
-        }
-      }*/
-
-    /*
     return (
         <div>
-            {session?.user ? (
-                <>
-                    {session.user.image && (
-                        <span style={{ backgroundImage: `url('${session.user.image}')` }} className="avatar" />
-                    )}
-                    <span className="signed_as">
-                        <small>Signed in as</small>
-                        <br />
-                        <strong>{session.user.email ?? session.user.name}</strong>
-                    </span>
-                    <Button 
-                        variant="ghost"
-                        onClick={(e) => {
-                            e.preventDefault()
-                            signOut()
-                        }}>
-                        Sign out
-                     </Button>
-                </>
+            {isAuthenticated 
+                ? userData ? (
+                    <Avatar>
+                        <AvatarImage src={userData.avatarUrl} />
+                        <AvatarFallback>You</AvatarFallback>
+                        {userData.username}
+                    </Avatar>
+                ) : (
+                    <p>Hi!</p>
             ) : (
                 <Button
                     className="button-github"
                     variant="ghost"
-                    onClick={handleSignIn}
-                    isLoading={loading}
-                    loadingText="Loading...">
+                    onClick={handleSignIn}>
                     <GitHubLogoIcon className="mr-2 h-6 w-6" /> Login GitHub
                 </Button>
             )}
         </div>
-    )*/
-
-    return (
-        <Button
-            className="button-github"
-            variant="ghost"
-            onClick={handleSignIn}
-            isLoading={loading}
-            loadingText="Loading...">
-            <GitHubLogoIcon className="mr-2 h-6 w-6" /> Login GitHub
-        </Button>
     )
 };
 
