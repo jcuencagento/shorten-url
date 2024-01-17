@@ -10,10 +10,10 @@ function Header () {
     
     return (
         <header className="App-header">
-            <div className="brand">
+            <a href="/" className="brand">
                 <img src={logo} className="App-logo" alt="logo" />
                 <h1> Shorten URL </h1>
-            </div>
+            </a>
             <Auth />
             <ModeToggle />
         </header>

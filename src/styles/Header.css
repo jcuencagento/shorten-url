@@ -43,3 +43,10 @@
         transform: rotate(360deg);
     }
 }
+
+/* Apply flex for mobile devices */
+@media (max-width: 767px) {
+    .App-header {
+        max-width: 90%;
+    }
+}

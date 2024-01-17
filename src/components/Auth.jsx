@@ -7,74 +7,67 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Button } from "./ui/button";
 
-const redirect_uri = 'https://my-shorten-url.vercel.app/api/github-callback';
 function Auth() {
     const { toast } = useToast();
     const navigate = useNavigate();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userData, setUserData] = useState(null);
+    const redirectToGitHubOAuth = () => {
+        const clientId = '4480658ab13c7754b880';
+        const redirectUri = 'https://my-shorten-url.vercel.app/dashboard';
+        const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user`;
+      
+        window.location.href = githubOAuthUrl;
+    };     
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
-
+        console.log({ code });
         if (code) {
-            setIsAuthenticated(true);
-            fetch('/api/github-callback', {
-                method: 'POST',
+            setIsAuthenticated(true);         
+            const hashParams = new URLSearchParams(window.location.hash.slice(1));
+            const accessToken = hashParams.get('access_token');
+            console.log(window.location);
+            console.log(hashParams);
+            console.log(accessToken);
+            fetch('https://api.github.com/user', {
                 headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    code: code,
-                }),
+                    Authorization: `Bearer ${accessToken}`
+                }
             })
-            .then(response => response.text())
-            .then(data => {
-                const accessToken = new URLSearchParams(data).get('access_token');
-                fetch('https://api.github.com/user', {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                })
-                .then(userResponse => userResponse.json())
-                .then(userData => {
-                    setUserData({
-                        username: userData.login,
-                        avatarUrl: userData.avatar_url
-                    });
+            .then(userResponse => userResponse.json())
+            .then(userData => {
+                if (userData.message === 'Bad credentials') {
+                    throw new Error('Bad credentials');
+                }
 
-                    console.log(userData);
-                    navigate('/dashboard');
-                    toast({
-                        title: 'Login Successful',
-                        description: 'You have successfully logged in with GitHub.'
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching user data:', error);
-                    toast({
-                        variant: 'destructive',
-                        title: 'Login Error',
-                        description: 'Failed to fetch user data from GitHub.'
-                    });
+                setUserData({
+                    username: userData.login,
+                    avatarUrl: userData.avatar_url
+                });
+
+                console.log(userData);
+                navigate('/dashboard');
+                toast({
+                    title: 'Login Successful',
+                    description: 'You have successfully logged in with GitHub.'
                 });
             })
             .catch(error => {
-                console.error('Error exchanging code for access token:', error);
+                console.error('Error fetching user data:', error);
                 toast({
                     variant: 'destructive',
                     title: 'Login Error',
-                    description: 'Failed to exchange code for access token.'
+                    description: 'Failed to fetch user data from GitHub.'
                 });
             });
         }
     }, [navigate, toast]);
 
     const handleSignIn = async () => {
-        console.log(process.env.GITHUB_ID);
         try {
-            window.location.href = `https://github.com/login/oauth/authorize?client_id=4480658ab13c7754b880&redirect_uri=${redirect_uri}&scope=user`;
+            redirectToGitHubOAuth();
         } catch (error) {
             toast({
                 variant: "destructive",
@@ -90,11 +83,11 @@ function Auth() {
                 ? userData ? (
                     <Avatar>
                         <AvatarImage src={userData.avatarUrl} />
-                        <AvatarFallback>You</AvatarFallback>
+                        <AvatarFallback>...</AvatarFallback>
                         {userData.username}
                     </Avatar>
                 ) : (
-                    <p>Hi!</p>
+                    <p>Hi! Try to login later</p>
             ) : (
                 <Button
                     className="button-github"

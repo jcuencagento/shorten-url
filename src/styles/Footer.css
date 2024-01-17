@@ -17,3 +17,10 @@
     font-weight: 500;
 }
 
+/* Apply flex for mobile devices */
+@media (max-width: 767px) {
+    .App-footer {
+        max-width: 90%;
+    }
+}
+

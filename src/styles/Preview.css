@@ -11,3 +11,10 @@
 .examples {
     max-width: 35%;
 }
+
+/* Apply flex for mobile devices */
+@media (max-width: 767px) {
+    .examples {
+        max-width: 80%;
+    }
+}
