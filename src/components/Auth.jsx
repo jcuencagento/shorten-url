@@ -21,18 +21,13 @@ function Auth() {
 
         if (code) {
             setIsAuthenticated(true);
-            fetch('https://github.com/login/oauth/access_token', {
+            fetch('/api/github-callback', {
                 method: 'POST',
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/json',
                 },
-                mode : 'no-cors',
                 body: JSON.stringify({
-                    client_id: '4480658ab13c7754b880',
-                    client_secret: '823c4fbed2207fd7db31c16b5819c0f4a429c6c4',
                     code: code,
-                    redirect_uri: redirect_uri
                 }),
             })
             .then(response => response.text())
