@@ -2,7 +2,7 @@ import React from 'react';
 
 import '../styles/Header.css';
 import logo from '../logo.svg';
-import Menu from './Menu';
+//import Menu from './Menu';
 import Auth from './Auth';
 import ModeToggle from './ModeToggle';
 
@@ -14,7 +14,6 @@ function Header () {
                 <img src={logo} className="App-logo" alt="logo" />
                 <h1> Shorten URL </h1>
             </div>
-            <Menu />
             <Auth />
             <ModeToggle />
         </header>

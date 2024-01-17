@@ -1,6 +1,5 @@
 {
     "rewrites": [
-        { "source": "/api/github-callback", "destination": "/vercel-functions/github-callback.js" },
         { "source": "/(.*)", "destination": "/index.html" }
     ]
 }

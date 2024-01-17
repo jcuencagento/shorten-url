@@ -4,10 +4,9 @@ const PORT = 3001;
 
 app.use(express.json());
 
-const redirect_uri = 'https://my-shorten-url.vercel.app/github-callback';
-app.post('/github-callback', async (req, res) => {
+const redirect_uri = 'https://my-shorten-url.vercel.app/api/github-callback';
+app.post('/api(github-callback', async (req, res) => {
     const { code } = req.body;
-
     const response = await fetch('https://github.com/login/oauth/access_token', {
         method: 'POST',
         headers: {

@@ -8,7 +8,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Button } from "./ui/button";
 
 const redirect_uri = 'https://my-shorten-url.vercel.app/api/github-callback';
-
 function Auth() {
     const { toast } = useToast();
     const navigate = useNavigate();
