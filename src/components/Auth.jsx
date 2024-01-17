@@ -26,40 +26,62 @@ function Auth() {
         console.log({ code });
         if (code) {
             setIsAuthenticated(true);         
-            const hashParams = new URLSearchParams(window.location.hash.slice(1));
-            const accessToken = hashParams.get('access_token');
-            console.log(window.location);
-            console.log(hashParams);
-            console.log(accessToken);
-            fetch('https://api.github.com/user', {
+            fetch('https://github.com/login/oauth/access_token', {
+                method: 'POST',
+                mode: 'no-cors',
                 headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    client_id: '4480658ab13c7754b880',
+                    client_secret: '823c4fbed2207fd7db31c16b5819c0f4a429c6c4',
+                    code: code,
+                }),
             })
-            .then(userResponse => userResponse.json())
-            .then(userData => {
-                if (userData.message === 'Bad credentials') {
-                    throw new Error('Bad credentials');
-                }
+            .then(response => response.json())
+            .then(data => {
+                const accessToken = data.access_token;
+                console.log(accessToken);
+                fetch('https://api.github.com/user', {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                })
+                .then(userResponse => userResponse.json())
+                .then(userData => {
+                    if (userData.message === 'Bad credentials') {
+                        throw new Error('Bad credentials');
+                    }
 
-                setUserData({
-                    username: userData.login,
-                    avatarUrl: userData.avatar_url
-                });
+                    setUserData({
+                        username: userData.login,
+                        avatarUrl: userData.avatar_url
+                    });
 
-                console.log(userData);
-                navigate('/dashboard');
-                toast({
-                    title: 'Login Successful',
-                    description: 'You have successfully logged in with GitHub.'
+                    console.log(userData);
+                    navigate('/dashboard');
+                    toast({
+                        title: 'Login Successful',
+                        description: 'You have successfully logged in with GitHub.'
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                    navigate('/');
+                    toast({
+                        variant: 'destructive',
+                        title: 'Login Error',
+                        description: 'Failed to fetch user data from GitHub.'
+                    });
                 });
             })
             .catch(error => {
-                console.error('Error fetching user data:', error);
+                console.error('Error fetching access token:', error);
+                navigate('/');
                 toast({
                     variant: 'destructive',
                     title: 'Login Error',
-                    description: 'Failed to fetch user data from GitHub.'
+                    description: 'Failed to fetch access token from GitHub.'
                 });
             });
         }
@@ -87,7 +109,9 @@ function Auth() {
                         {userData.username}
                     </Avatar>
                 ) : (
-                    <p>Hi! Try to login later</p>
+                    <Button className="button-github" variant="ghost" disabled>
+                        <GitHubLogoIcon className="mr-2 h-6 w-8" /> Hi! Try to login later
+                    </Button>
             ) : (
                 <Button
                     className="button-github"
