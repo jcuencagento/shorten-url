@@ -15,7 +15,7 @@ function Auth() {
     const redirectToGitHubOAuth = () => {
         const clientId = '4480658ab13c7754b880';
         const redirectUri = 'https://my-shorten-url.vercel.app/dashboard';
-        const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user`;
+        const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=repo`;
       
         window.location.href = githubOAuthUrl;
     };     
@@ -36,6 +36,7 @@ function Auth() {
                     client_id: '4480658ab13c7754b880',
                     client_secret: '823c4fbed2207fd7db31c16b5819c0f4a429c6c4',
                     code: code,
+                    redirect_uri: 'https://my-shorten-url.vercel.app/dashboard'
                 }),
             })
             .then(response => response.json())

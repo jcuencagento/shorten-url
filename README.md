@@ -1,14 +1,20 @@
 # Shorten URL
-Nice URL shortener. Login with GitHub to store and remember your links.
+
+
+📎 URL shortener draft project.
+
 
 <p align="center">
-   <a href="https://my-shorten-url.vercel.app/"><img align="center" src="./src/assets/images/URL_Shortener.webp" /></a>
+   <a href="https://my-shorten-url.vercel.app/"><img align="center" src="./src/assets/images/monke.png" /></a>
 </p>
 
 <br />
 <br />
-<br />
 
+📋 Create React App, Vercel, shadcn + Tailwind... messing around for future projects.
+
+
+💤 GitHub persistance in the future...
 
 
 > [!NOTE]
